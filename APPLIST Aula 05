@@ -1,0 +1,93 @@
+import React from 'react';
+import { VirtualizedList, Text, StyleSheet, SafeAreaView, View, Button } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';  // Usando ícones do Ionicons
+
+// Dados de exemplo
+const DATA = Array.from({ length: 1000 }, (_, index) => ({
+  id: String(index),
+  title: `Item ${index + 1}`,
+  subtitle: `Subtítulo do item ${index + 1}`,
+}));
+
+// Função para obter a contagem de itens
+const getItemCount = (data) => data.length;
+
+// Função para obter um item específico com base no índice
+const getItem = (data, index) => data[index];
+
+const App = () => {
+  // Função de renderização para cada item
+  const renderItem = ({ item, index }) => (
+    <View style={styles.itemContainer}>
+      {/* Ícone no início */}
+      <Ionicons name="md-checkmark-circle" size={24} color="green" style={styles.icon} />
+
+      <View style={styles.textContainer}>
+        {/* Título do item */}
+        <Text style={styles.itemTitle}>{item.title}</Text>
+        
+        {/* Subtítulo do item */}
+        <Text style={styles.itemSubtitle}>{item.subtitle}</Text>
+      </View>
+
+      {/* Botão dentro do item */}
+      <Button title="Ação" onPress={() => alert(`Item ${index + 1} pressionado!`)} />
+    </View>
+  );
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <VirtualizedList
+        data={DATA}
+        initialNumToRender={10}  // Número inicial de itens a renderizar
+        renderItem={renderItem}   // Função para renderizar o item
+        keyExtractor={(item) => item.id} // Chave única para cada item
+        getItemCount={getItemCount} // Função para contar os itens
+        getItem={getItem} // Função para obter um item específico
+        maxToRenderPerBatch={10} // Número de itens renderizados por lote
+        windowSize={5} // Número de itens fora da tela a serem renderizados para uma rolagem mais suave
+        style={styles.list} // Estilo da lista
+      />
+    </SafeAreaView>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#f0f0f0',
+  },
+  list: {
+    paddingTop: 10,
+  },
+  itemContainer: {
+    backgroundColor: '#fff',
+    padding: 15,
+    marginBottom: 10,
+    borderRadius: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    elevation: 3,
+    flexDirection: 'row', // Organiza os itens em linha (horizontal)
+    alignItems: 'center', // Centraliza os itens verticalmente
+  },
+  icon: {
+    marginRight: 10, // Espaçamento entre o ícone e o texto
+  },
+  textContainer: {
+    flex: 1, // Faz o texto ocupar o espaço restante
+  },
+  itemTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  itemSubtitle: {
+    fontSize: 14,
+    color: '#888',
+  },
+});
+
+export default App;
